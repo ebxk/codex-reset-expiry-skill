@@ -12,7 +12,7 @@ The skill calls the same reset-credit endpoint used by Codex Desktop:
 https://chatgpt.com/backend-api/wham/rate-limit-reset-credits
 ```
 
-It reads the local Codex auth session from `~/.codex/auth.json`, uses the access token only in memory, and prints a sanitized summary with available reset counts and expiration dates.
+It reads the local Codex auth session from `CODEX_HOME/auth.json` or `~/.codex/auth.json`, uses the access token only in memory, and prints a sanitized summary with available reset counts and expiration dates.
 
 ## Scope
 
@@ -68,7 +68,7 @@ The script prints bilingual output by default. Use `--lang en`, `--lang zh`, or 
 https://chatgpt.com/backend-api/wham/rate-limit-reset-credits
 ```
 
-它会读取本机 Codex 登录态 `~/.codex/auth.json`，只在内存中使用 access token，并只输出脱敏后的可用次数和到期时间。
+它会读取本机 Codex 登录态 `CODEX_HOME/auth.json` 或 `~/.codex/auth.json`，只在内存中使用 access token，并只输出脱敏后的可用次数和到期时间。
 
 ## 范围
 

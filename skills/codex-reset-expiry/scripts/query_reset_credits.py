@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
@@ -15,14 +16,29 @@ from pathlib import Path
 ENDPOINT = "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits"
 
 
+def default_auth_path() -> Path:
+    codex_home = os.environ.get("CODEX_HOME")
+    if codex_home:
+        return Path(codex_home).expanduser() / "auth.json"
+    return Path.home() / ".codex" / "auth.json"
+
+
+def display_path(path: Path) -> str:
+    try:
+        home = Path.home()
+        return str(path).replace(str(home), "~", 1)
+    except RuntimeError:
+        return str(path)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Query Codex rate-limit reset credit expiration dates."
     )
     parser.add_argument(
         "--auth",
-        default=str(Path.home() / ".codex" / "auth.json"),
-        help="Path to Codex auth.json. Defaults to ~/.codex/auth.json.",
+        default=str(default_auth_path()),
+        help="Path to Codex auth.json. Defaults to CODEX_HOME/auth.json or ~/.codex/auth.json.",
     )
     parser.add_argument(
         "--endpoint",
@@ -45,12 +61,14 @@ def parse_args() -> argparse.Namespace:
 
 def load_credentials(auth_path: Path) -> tuple[str, str | None]:
     if not auth_path.exists():
-        raise RuntimeError(f"Codex auth file was not found: {auth_path}")
+        raise RuntimeError(f"Codex auth file was not found: {display_path(auth_path)}")
 
     try:
         auth = json.loads(auth_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        raise RuntimeError(f"Codex auth file is not valid JSON: {auth_path}") from exc
+        raise RuntimeError(
+            f"Codex auth file is not valid JSON: {display_path(auth_path)}"
+        ) from exc
 
     tokens = auth.get("tokens")
     if not isinstance(tokens, dict):
@@ -70,6 +88,7 @@ def load_credentials(auth_path: Path) -> tuple[str, str | None]:
 def fetch_reset_credits(endpoint: str, access_token: str, account_id: str | None) -> dict:
     headers = {
         "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json",
         "OpenAI-Beta": "codex-1",
         "originator": "Codex Desktop",
         "User-Agent": "codex-reset-expiry-skill/1.0",
