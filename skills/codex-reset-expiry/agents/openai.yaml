@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Reset Expiry"
+  short_description: "Query Codex reset credit expiration dates safely."
+  default_prompt: "Use $codex-reset-expiry to check when my Codex reset credits expire."
