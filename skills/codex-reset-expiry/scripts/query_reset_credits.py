@@ -34,6 +34,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Print sanitized JSON instead of a human-readable summary.",
     )
+    parser.add_argument(
+        "--lang",
+        choices=("en", "zh", "both"),
+        default="both",
+        help="Human-readable output language. Defaults to both.",
+    )
     return parser.parse_args()
 
 
@@ -143,7 +149,7 @@ def sanitized_summary(data: dict) -> dict:
     }
 
 
-def print_human(summary: dict) -> None:
+def print_human_en(summary: dict) -> None:
     print("Codex reset credits")
     print(f"Available count: {summary.get('available_count')}")
 
@@ -156,6 +162,30 @@ def print_human(summary: dict) -> None:
         expires = credit.get("expires_local") or credit.get("expires_at") or "unknown"
         granted = credit.get("granted_local") or credit.get("granted_at") or "unknown"
         print(f"{index}. Expires: {expires} (granted: {granted})")
+
+
+def print_human_zh(summary: dict) -> None:
+    print("Codex reset 到期时间")
+    print(f"可用次数: {summary.get('available_count')}")
+
+    available = summary.get("available_credits") or []
+    if not available:
+        print("接口没有返回带到期时间的可用 reset credit。")
+        return
+
+    for index, credit in enumerate(available, start=1):
+        expires = credit.get("expires_local") or credit.get("expires_at") or "未知"
+        granted = credit.get("granted_local") or credit.get("granted_at") or "未知"
+        print(f"{index}. 到期: {expires} (获得: {granted})")
+
+
+def print_human(summary: dict, lang: str) -> None:
+    if lang in ("en", "both"):
+        print_human_en(summary)
+    if lang == "both":
+        print()
+    if lang in ("zh", "both"):
+        print_human_zh(summary)
 
 
 def main() -> int:
@@ -171,7 +201,7 @@ def main() -> int:
     if args.json:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
     else:
-        print_human(summary)
+        print_human(summary, args.lang)
     return 0
 
 
