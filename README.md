@@ -26,6 +26,12 @@ This project is intentionally small:
 
 ## Install
 
+For Codex, Claude Code, OpenCode/OpenClaw-style agents, Cursor, Goose, Amp, VS Code/GitHub skill consumers, and other tools that support the open Agent Skills / Skills CLI workflow, install in one line:
+
+```sh
+npx skills add ebxk/codex-reset-expiry-skill@codex-reset-expiry -g -y
+```
+
 Copy the skill folder into your Codex skills directory:
 
 ```powershell
@@ -81,6 +87,12 @@ https://chatgpt.com/backend-api/wham/rate-limit-reset-credits
 - 不打印或保存 token
 
 ## 安装
+
+对于 Codex、Claude Code、OpenCode/OpenClaw 风格的 agent、Cursor、Goose、Amp、VS Code/GitHub skill consumers，以及其他支持 open Agent Skills / Skills CLI 工作流的工具，可以一句话安装：
+
+```sh
+npx skills add ebxk/codex-reset-expiry-skill@codex-reset-expiry -g -y
+```
 
 把 skill 文件夹复制到你的 Codex skills 目录：
 
