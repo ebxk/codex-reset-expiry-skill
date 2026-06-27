@@ -1,6 +1,6 @@
 # codex-reset-expiry-skill
 
-English | 中文
+[English](#codex-reset-expiry-skill) | [中文](#中文)
 
 A small Codex skill that checks the expiration dates for available Codex rate-limit reset credits.
 
